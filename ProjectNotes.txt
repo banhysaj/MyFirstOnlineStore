@@ -1,0 +1,2 @@
+1. On API.csproj you have added <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0"/>
+Since it wasnt existing, at any point in the future please keep this in mind
