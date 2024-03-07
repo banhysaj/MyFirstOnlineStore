@@ -1,5 +1,6 @@
 
 using API.DTO;
+using API.Errors;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -10,13 +11,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-    [ApiController]
-
-    //Whenever we will want to reference a controller we will use this syntax
-    [Route("api/[controller]")]
 
     //All our controllers will inherit from ControllerBase
-    public class ProductsController: ControllerBase
+    public class ProductsController: BaseApiController  
     {
 
         //Here we make queries to DB
@@ -56,16 +53,21 @@ namespace API.Controllers
         }
         
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResponse), StatusCodes.Status404NotFound)]
+
         public async Task<ActionResult<ProductToReturnDto>> GetProduct(int id){
 
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
 
             var product = await _productsRepo.GetEntityWithSpec(spec);
 
+            if(product == null) return NotFound(new ApiResponse(404));
+
             return _mapper.Map<Product, ProductToReturnDto>(product);
         }
 
-        [HttpGet("brands")]
+        [HttpGet("brands")] 
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductBrands(){
             return Ok(await _productBrandRepo.ListAllAsync());
         }
