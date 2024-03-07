@@ -24,10 +24,10 @@
     "ProductBrandId": 2
   },
   {
-    "Name": "Net Core Super Board",
-    "Description": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin pharetra nonummy pede. Mauris et orci.",
-    "Price": 300,
-    "PictureUrl": "images/products/sb-core2.png",
+    "Name": "Gucci black Bucket Hat",
+    "Description": "Simply amazing",
+    "Price": 150,
+    "PictureUrl": "images/products/Gucci_buckethat4.jpg",
     "ProductTypeId": 1,
     "ProductBrandId": 2
   },
