@@ -1,6 +1,8 @@
 
+using System.Diagnostics.Metrics;
 using API.DTO;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -42,13 +44,21 @@ namespace API.Controllers
         //By wrapping our method with "Task" we make the code Async
         //Helps us make use of a thread, by creating tasks within threads
         //Helps us handle many concurrent requests
-        public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts(){
+        public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts
+        ([FromQuery]ProductSpecParams productParams){
 
-            var spec = new  ProductsWithTypesAndBrandsSpecification();
+            var spec = new  ProductsWithTypesAndBrandsSpecification(productParams);
 
+            var countSpec = new ProductWithFiltersForCountSpecification(productParams);
+
+            var totalItems = await _productsRepo.CountAsync(countSpec);
+            
             var products = await _productsRepo.ListAsync(spec);
 
-            return Ok(_mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products));
+            var data = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+
+            return Ok(new Pagination<ProductToReturnDto>(productParams.PageIndex, productParams.PageSize,
+            totalItems, data));
 
         }
         

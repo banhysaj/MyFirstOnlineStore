@@ -15,6 +15,19 @@ namespace Infrastructure.Data
             if(spec.Criteria != null){
                 query = query.Where(spec.Criteria); 
             }
+
+            if(spec.OrderBy != null){
+                query = query.OrderBy(spec.OrderBy);
+            }
+
+            if(spec.OrderByDescending != null){
+                query = query.OrderByDescending(spec.OrderByDescending);
+            }
+
+            if(spec.IsPagingEnabled)
+            {
+                query = query.Skip(spec.Skip).Take(spec.Take);
+            }
             
             query = spec.Includes.Aggregate(query, (current, include)=>current.Include(include));
 
@@ -23,15 +36,3 @@ namespace Infrastructure.Data
     }
 }
 
-/*We have done all of this because when we use generics we are unable to use a method 
-we had used before...
-
-        public async Task<Product> GetProductByIdAsync(int id)
-        {
-            return await _context.Products
-            .Include(p => p.ProductType)
-            .Include(p => p.ProductBrand)
-            .FirstOrDefaultAsync(p => p.Id == id);
-        }
-This is the method we couldnt use when we use generics. 
-*/

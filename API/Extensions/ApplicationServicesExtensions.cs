@@ -9,7 +9,8 @@ namespace API.Extensions
 {
     public static class ApplicationservicesExtensions
     {
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config){
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
+        {
 
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
@@ -41,6 +42,14 @@ namespace API.Extensions
                     return new BadRequestObjectResult(errorResponse);
                 };
             });
+
+            services.AddCors(opt =>
+
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("https://localhost:4200");
+                })
+            );
 
             return services;
         }
