@@ -86,5 +86,37 @@ namespace API.Controllers
         public async Task<ActionResult<IReadOnlyList<ProductType>>> GetProductTypes(){
             return Ok(await _productTypeRepo.ListAllAsync());
         }
+        //
+[HttpPost]
+public async Task<ActionResult<ProductToReturnDto>> AddProduct([FromBody] ProductToAddDto productToAddDto)
+{
+    try
+    {
+        // Map the DTO to your entity
+        var product = _mapper.Map<ProductToAddDto, Product>(productToAddDto);
+        var idofProduct = product.Id;
+
+        // Add the product to the repository
+        _productsRepo.Add(product);
+
+        // Save changes to the database
+        await _productsRepo.SaveChangesAsync();
+
+        // Map the added product to the DTO and return it in the response
+        var productToReturnDto = _mapper.Map<Product, ProductToReturnDto>(product);
+
+        // Return the created product along with its location in the response headers
+        return CreatedAtAction(nameof(GetProduct), new { id = idofProduct });
+    }
+catch (Exception ex)
+{
+
+    // Return a detailed error response
+    return StatusCode(500, new { message = "An error occurred while processing the request.", details = ex.ToString() });
+}
+
+}
+
+        //
     }
 }

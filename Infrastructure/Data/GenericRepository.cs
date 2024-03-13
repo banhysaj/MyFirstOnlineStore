@@ -19,7 +19,15 @@ namespace Infrastructure.Data
         {
             return await _context.Set<T>().FindAsync(id);
         }
-
+        //
+        public async Task<int> SaveChangesAsync(){
+            return await _context.SaveChangesAsync();
+        }
+        public void Add(T entity)
+        {
+        _context.Set<T>().Add(entity);
+        }
+        //
         public async Task<IReadOnlyList<T>> ListAllAsync()
         {
             return await _context.Set<T>().ToListAsync();

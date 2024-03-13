@@ -10,3 +10,8 @@
 
 /* Importing Bootstrap SCSS file. */
 @import "./node_modules/bootstrap/scss/bootstrap";
+
+label.xng-breadcrumb-trail{
+    font-weight: 500;
+    color: rgb(0, 0, 0);
+}
