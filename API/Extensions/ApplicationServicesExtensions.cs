@@ -26,11 +26,13 @@ namespace API.Extensions
 
             //In here we are adding Redis to effectively managing the customer basket (Cart)
             //Redis will make it possible for the cart to be temporarily be saved in the memory of our Server
-            services.AddSingleton<IConnectionMultiplexer>(c =>{
+            
+            // services.AddSingleton<IConnectionMultiplexer>(c =>
+            // {
 
-                var options = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
-                return ConnectionMultiplexer.Connect(options);
-            });
+            //     var options = ConfigurationOptions.Parse(config.GetConnectionString("Redis"));
+            //     return ConnectionMultiplexer.Connect(options);
+            // });
 
             //services.AddScoped<IBasketRepository, BasketRepository>();
             services.AddScoped<IProductRepository, ProductRepository>();
