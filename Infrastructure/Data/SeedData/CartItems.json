@@ -1,0 +1,32 @@
+[
+    {
+        "ProductId": 1,
+        "Quantity": 5,
+        "ShoppingCart": 1
+    },
+
+    {
+        "ProductId": 1,
+        "Quantity": 3,
+        "ShoppingCart": 2
+    },
+
+    {
+        "ProductId": 2,
+        "Quantity": 2,
+        "ShoppingCart": 1
+    },
+    {
+        "ProductId": 3,
+        "Quantity": 4,
+        "ShoppingCart": 3
+    },
+
+    {
+        "ProductId": 1,
+        "Quantity": 2,
+        "ShoppingCart": 1
+    }
+    
+    
+]

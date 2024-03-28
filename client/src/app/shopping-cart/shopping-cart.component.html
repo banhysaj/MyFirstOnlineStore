@@ -1,0 +1,22 @@
+<!-- <h3>Cart</h3>
+
+<div class="cart-item" *ngFor="let item of items">
+  <span>{{ item.product.name }}</span>
+  <span>{{ item.product.price| currency }}</span>
+  <span>Quantity: {{ item.quantity }}</span>
+  <img src="{{item.product.pictureUrl}}" alt="{{item.product.name}}" style="width: 50px;">
+  <i class="fa fa-minus-circle text-warning me-2" (click)="removeFromCart(item.product)" style="cursor: pointer; font-size: 2em;"></i>
+  <i class="fa fa-plus-circle text-warning ms-2" (click)="addToCart(item.product)" style="cursor: pointer; font-size: 2em;"></i>
+</div> -->
+
+  <div *ngIf="shoppingCartData">
+    <h2>Shopping Cart</h2>
+    <p>User ID: {{ shoppingCartData.userId }}</p>
+    <ul>
+      <div class="cart-item" *ngFor="let item of shoppingCartData.cartItems" >
+        <span>Name: {{item.product.name}}</span>
+        <span>Quantity: {{ item.quantity }}</span>
+      </div>
+    </ul>
+    <button>Checkout</button>
+  </div>
