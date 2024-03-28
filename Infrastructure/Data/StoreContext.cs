@@ -7,9 +7,9 @@ namespace Infrastructure.Data
 {
     public class StoreContext : DbContext
     {
-        public StoreContext(DbContextOptions options) : base(options)
+        public StoreContext(DbContextOptions<StoreContext> options) : base(options)
         {
-            
+               
         }
         public DbSet<Product> Products{ get; set; }
         
@@ -17,12 +17,22 @@ namespace Infrastructure.Data
         public DbSet<ProductBrand> ProductBrands {get;set;}
         public DbSet<ProductType> ProductTypes { get; set; }
 
+        public DbSet<User> Users {get; set;}
+        public DbSet<Cart_Item> Cart_Items { get; set; }
+        public DbSet<ShoppingCart> Shopping_Carts {get; set;}
+        public DbSet<Order> Orders {get; set;}
+        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-            if(Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite") 
+            modelBuilder.Entity<Order>()
+            .Property(o => o.OrderDate)
+            .HasColumnType("TEXT");
+
+            if(Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
             {
                 foreach(var entityType in modelBuilder.Model.GetEntityTypes())
                 {
@@ -34,8 +44,57 @@ namespace Infrastructure.Data
                     }
                 }
             }
-
         }
+
+        public void AddUser(User user){
+            Users.Add(user);
+            SaveChangesAsync();
+        }
+
+        public void AddCart(ShoppingCart cart){
+            Shopping_Carts.Add(cart);
+            SaveChangesAsync();
+        }
+
+        public User GetUserById(int id){
+                return Users.FirstOrDefault(u => u.Id == id);
+        }
+
+        public ShoppingCart GetCartById(int id){
+            return Shopping_Carts.FirstOrDefault(s => s.Id == id);
+        }
+
+        public List<User> GetAllUsers(){
+            return Users.ToList();
+        }
+
+        public List<ShoppingCart> GetAllCarts(){
+            return Shopping_Carts.ToList();
+        }
+
+
+        public void DeleteUserById(int Id){
+            var userToDelete = GetUserById(Id);
+
+            if (userToDelete != null)
+            {
+                
+                Users.Remove(userToDelete);
+                
+                SaveChanges();
+            }
+        }
+
+        public void UpdateUser(User updatedUser)
+        {
+            var existingUser = Users.Find(updatedUser.Id);
+            if (existingUser != null)
+            {
+                Entry(existingUser).CurrentValues.SetValues(updatedUser);
+                SaveChanges();
+            }
+        }
+
 
     }
 }

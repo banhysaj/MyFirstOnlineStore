@@ -21,3 +21,16 @@ a{
 .logo{
     cursor: pointer;
 }
+
+.logout-link {
+    color: #fff; /* Text color */
+    background-color: rgba(255, 0, 0, 0.619); /* Background color */
+    padding: 10px 20px; /* Padding */
+    border-radius: 20px; /* Rounded corners */
+    text-decoration: none; /* Remove underline */
+  }
+  
+  .logout-link:hover {
+    background-color: rgb(244, 70, 70); /* Change background color on hover */
+  }
+

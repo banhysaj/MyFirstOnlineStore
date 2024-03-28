@@ -6,16 +6,21 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CoreModule } from './core/core.module';
-import { ShopModule } from './shop/shop.module';
 import { HomeModule } from './home/home.module';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { ErrorInterceptor } from './core/interceptors/error.interceptor';
+import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
+import { LoginComponent } from './identity/login/login.component';
+import { SignupComponent } from './identity/signup/signup.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ShoppingCartComponent,
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserModule,
@@ -24,11 +29,9 @@ import { ErrorInterceptor } from './core/interceptors/error.interceptor';
     HttpClientModule,
     CoreModule,
     HomeModule,
-    PaginationModule.forRoot()
-  ],
-  providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
-  ],
+    PaginationModule.forRoot(),
+    ReactiveFormsModule
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
