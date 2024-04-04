@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from './identity/services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ShoppingCartModalComponent } from './shop/shopping-cart-modal/shopping-cart-modal.component';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +12,19 @@ export class AppComponent implements OnInit {
   isLoggedIn: boolean = false;
   userName: string | null = null;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,public dialog: MatDialog) {}
+
+
+  openShoppingCartModal(): void {
+    const dialogRef = this.dialog.open(ShoppingCartModalComponent, {
+      width: '600px',
+      data: { }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
 
   ngOnInit(): void {
     const isLoggedInStr = localStorage.getItem('isLoggedIn');

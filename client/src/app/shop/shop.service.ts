@@ -14,6 +14,16 @@ export class ShopService {
 
   constructor(private http: HttpClient) { }
 
+  addItemToCart(userId: number, productId: number) {
+    const itemObj = { userId: userId, productId: productId };
+    return this.http.post<any>(`${this.baseUrl}shoppingCarts/addItemToCart/${userId}`, itemObj);
+  }
+
+  removeItemFromCart(userId: number, productId: number){
+    const itemObj = {userId: userId, productId: productId};
+    return this.http.post<any>(`${this.baseUrl}shoppingCarts/removeItemFromCart/${userId}`, itemObj);
+  }
+  
   getProducts(shopParams: ShopParams){
     let params = new HttpParams();
 
@@ -22,13 +32,10 @@ export class ShopService {
     params = params.append('typeId', shopParams.typeId);
     params = params.append('sort', shopParams.sort);
 
-    //console.log(shopParams.pageNumber);
-
     params = params.append('pageIndex', shopParams.pageNumber);
     params = params.append('pageSize', shopParams.pageSize);
     if(shopParams.search) params = params.append('search', shopParams.search);
 
-    //console.log('Final URL:', this.baseUrl + "products", { params });
 
     return this.http.get<Pagination<Product[]>>(this.baseUrl + "products", {params});
   }

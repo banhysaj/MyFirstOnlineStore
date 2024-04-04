@@ -1,15 +1,19 @@
-<div class="row" *ngIf="product">
-    <div class="col-6">
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+<div class="row" *ngIf="!isLoading && product">
+    <div class="col-5">
         <img src="{{product.pictureUrl}}" alt="{{product.name}}" class="w-100">
     </div>
     <div class="col-6 mt-5">
         <h2>{{product.name}}</h2>
         <p styl="font-size: 2em;" >{{product.price | currency}}</p>
         <div class="d-flex justify-content-start align-items-center">
-            <i class="fa fa-minus-circle text-warning me-2" style="cursor: pointer; font-size: 2em;"></i>
-            <span class="font-weight-bold" style="font-size: 1.5em;"> 2 </span>
-            <i class="fa fa-plus-circle text-warning ms-2" style="cursor: pointer; font-size: 2em;"></i>
-            <button class="btn btn-outline-secondary ms-4"(click)="addToCart(product)">Add to cart</button>
+            <i class="fa fa-minus-circle text-warning me-2" style="cursor: pointer; font-size: 2em;"
+            (click)="removeFromCart(product.id)"></i>
+            <span class="font-weight-bold" style="font-size: 1.5em;"> </span>
+            <i class="fa fa-plus-circle text-warning ms-2" style="cursor: pointer; font-size: 2em;"
+            (click)="addToCart(product.id)"></i>
+            <!-- <button class="btn btn-outline-secondary ms-4"(click)="addToCart(product.id)">Add to cart</button> -->
         </div>
         <div class="row mt-4">
             <h4>Description</h4>

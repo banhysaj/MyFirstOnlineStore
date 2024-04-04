@@ -8,18 +8,21 @@
   </nav>
 
   <div class="d-flex align-items-center">
-    <a class="position-relative">
-      <button routerLink="/cart" style="border-radius: 20px; border: none;" class="fa fa-shopping-cart fa-2x me-5 text-dark"></button>
-      <div class="cart-no">5</div>
-    </a>
-
-    <!-- Conditionally display login/logout and sign up buttons based on authentication status -->
+    
+    <!-- Display login/logout and sign up buttons based on authentication status -->
     <ng-container *ngIf="isLoggedIn; else loginButtons">
-      
+      <a class="position-relative" (click)="handleOpenShoppingCartModal()">
+        <button style="border-radius: 20px; border: none;" class="fa fa-shopping-cart fa-2x me-5 text-dark"></button>
+        <div class="cart-no">{{ cartItemCount }}</div>
+      </a>
       <span class="me-3">Welcome {{ firstName }}</span>
       <a href="" class="logout-link" (click)="logout()">Logout</a>
     </ng-container>
     <ng-template #loginButtons>
+      <a class="position-relative">
+        <button routerLink="/login" style="border-radius: 20px; border: none;" class="fa fa-shopping-cart fa-2x me-5 text-dark"></button>
+        <div class="cart-no">{{ cartItemCount }}</div>
+      </a>
       <a href="" class="btn btn-outline-secondary me-2" routerLink="/login">Login</a>
       <a href="" class="btn btn-outline-secondary me-3" routerLink="/signup">Sign up</a>
     </ng-template>

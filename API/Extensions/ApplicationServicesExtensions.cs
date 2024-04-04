@@ -1,10 +1,12 @@
 
 using API.Errors;
+using API.Helpers;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+
 
 namespace API.Extensions
 {
@@ -24,7 +26,7 @@ namespace API.Extensions
             });
 
             services.AddScoped<IProductRepository, ProductRepository>();
-
+            services.Configure<StripeSettings>(config.GetSection("Stripe"));
             
             
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));

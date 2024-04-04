@@ -55,20 +55,29 @@ namespace API.Controllers
         }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] User userObj){
-        if(userObj == null){
+    
+    //RREGULLO USER TO REGISTERDTO, PRANON PASSWORDE TE THJESHTA, SHIH REGEXAT
+    public async Task<IActionResult> Register([FromBody] RegisterDto registerObj){
+        
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        if(registerObj == null){
             return BadRequest();
         }
 
-        var emailExists = await _authContext.Users.AnyAsync(x=> x.Email == userObj.Email);
+        var emailExists = await _authContext.Users.AnyAsync(x=> x.Email == registerObj.Email);
         if(emailExists){
             return BadRequest(new {Message = "Email already exists"});
         }
 
-        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userObj.Password);
-        userObj.Password = hashedPassword;
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerObj.Password);
+        registerObj.Password = hashedPassword;
+        
 
-        await _authContext.AddAsync(userObj);
+        await _authContext.AddAsync(registerObj);
         await _authContext.SaveChangesAsync();
 
         return Ok(new {

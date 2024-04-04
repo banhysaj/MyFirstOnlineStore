@@ -16,14 +16,14 @@ namespace API.Controllers
             _context =context;
         }
 
-        [HttpGet("user/{Id}")]
-        public async Task<ActionResult<ShoppingCartDto>> GetShoppingCartByUserId(int Id)
+        [HttpGet("user/{userId}")]
+        public async Task<ActionResult<ShoppingCartDto>> GetShoppingCartByUserId(int userId)
         {
             var cart = await _context.Shopping_Carts
                 .Include(x => x.Cart_Items)
                 .ThenInclude(x => x.Product)
                 .Include(x => x.User)
-                .FirstOrDefaultAsync(x => x.User.Id == Id);
+                .FirstOrDefaultAsync(x => x.User.Id == userId);
 
             if (cart == null)
             {
@@ -41,7 +41,8 @@ namespace API.Controllers
                     Product = new ProductDto{
                             Id = ci.Product.Id,
                             Name = ci.Product.Name,
-                            Price = ci.Product.Price
+                            Price = ci.Product.Price,
+                            PictureUrl = ci.Product.PictureUrl
                     }
                 }).ToList()
             };
@@ -102,15 +103,15 @@ namespace API.Controllers
 
         
 
-        [HttpGet("{Id}")]
-        public IActionResult GetCart(int Id)
+        [HttpGet("{cartId}")]
+        public IActionResult GetCart(int cartId)
         {
             
             var cart = _context.Shopping_Carts
                                 .Include(x => x.Cart_Items)
                                 .ThenInclude(x => x.Product)
                                 .Include(x => x.User)
-                                .FirstOrDefault(x => x.Id == Id);
+                                .FirstOrDefault(x => x.Id == cartId);
 
             
             if (cart == null)
@@ -136,7 +137,8 @@ namespace API.Controllers
                     Product = new ProductDto{
                             Id = cartItem.Product.Id,
                             Name = cartItem.Product.Name,
-                            Price = cartItem.Product.Price
+                            Price = cartItem.Product.Price,
+                            PictureUrl = cartItem.Product.PictureUrl
                     }
                 };
                 cartDto.CartItems.Add(cartItemDto);
@@ -175,7 +177,8 @@ namespace API.Controllers
                         Product = new ProductDto{
                             Id = cartItem.Product.Id,
                             Name = cartItem.Product.Name,
-                            Price = cartItem.Product.Price
+                            Price = cartItem.Product.Price,
+                            PictureUrl = cartItem.Product.PictureUrl
                     } 
                     };
 
@@ -234,7 +237,8 @@ namespace API.Controllers
                         Product = new ProductDto{
                             Id = ci.Product.Id,
                             Name = ci.Product.Name,
-                            Price = ci.Product.Price
+                            Price = ci.Product.Price,
+                            PictureUrl = ci.Product.PictureUrl
                     }
                     }).ToList()
                 };
@@ -242,19 +246,28 @@ namespace API.Controllers
                 return CreatedAtAction(nameof(GetCart), new { id = cartDto.Id }, cartDto);
             }
 
-            [HttpPost("addItemTocart/{Id}")]
-            public async Task<IActionResult> AddItemToCart(int Id, AddToCartDto addToCartDto){
-
-                var shoppingCart = await _context.Shopping_Carts
-                .Include(sc => sc.Cart_Items)
-                .FirstOrDefaultAsync(sc => sc.User.Id == Id);
+        [HttpPost("addItemToCart/{userId}")]
+        public async Task<IActionResult> AddItemToCart(int userId, AddToCartDto addToCartDto)
+        {
+            var shoppingCart = await _context.Shopping_Carts
+                .Include(x => x.Cart_Items)
+                .ThenInclude(x => x.Product)
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.User.Id == userId);
 
             if (shoppingCart == null)
             {
-                return NotFound("Shopping cart not found for the specified user.");
+               
+                shoppingCart = new ShoppingCart
+                {
+                    User = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId),
+                    Cart_Items = new List<Cart_Item>()
+                };
+                _context.Shopping_Carts.Add(shoppingCart);
+                await _context.SaveChangesAsync(); 
             }
 
-            // Retrieve the product based on the provided ProductId
+            
             var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == addToCartDto.ProductId);
 
             if (product == null)
@@ -262,37 +275,71 @@ namespace API.Controllers
                 return NotFound($"Product with ID {addToCartDto.ProductId} not found.");
             }
 
-            // Create a new Cart_Item with the provided Product and Quantity
-            var cartItem = new Cart_Item
+            var existingCartItem = shoppingCart.Cart_Items.FirstOrDefault(ci => ci.Product.Id == addToCartDto.ProductId);
+            if (existingCartItem != null)
             {
-                Product = product,
-                Quantity = addToCartDto.Quantity
-            };
-
-            // Add the new Cart_Item to the shopping cart
-            shoppingCart.Cart_Items.Add(cartItem);
+                existingCartItem.Quantity++;
+            }
+            else
+            {
+                var cartItem = new Cart_Item
+                {
+                    Product = product,
+                    Quantity = 1 
+                };
+                shoppingCart.Cart_Items.Add(cartItem);
+            }
 
             await _context.SaveChangesAsync();
-
-            // Return a response with the updated shopping cart DTO
-            /*
-            var updatedCartDto = new ShoppingCartDto
-            {
-                Id = shoppingCart.Id,
-                UserId = shoppingCart.User.Id,
-                CartItems = shoppingCart.Cart_Items.Select(ci => new CartItemDto
-                {
-                    Id = ci.Id,
-                    Quantity = ci.Quantity,
-                    Product = new ProductDto{
-                            Id = cartItem.Product.Id,
-                            Name = cartItem.Product.Name,
-                            Price = cartItem.Product.Price
-                    }
-                }).ToList() 
-            };
-                */
-            return Ok("New item had been added in shoppng cart");
+            return Ok("Item has been added to the shopping cart");
         }
+        
+        [HttpPost("removeItemFromCart/{userId}")]
+        public async Task<IActionResult> RemoveItemFromCart(int userId, AddToCartDto addToCartDto)
+        {
+            var shoppingCart = await _context.Shopping_Carts
+                .Include(x => x.Cart_Items)
+                .ThenInclude(x => x.Product)
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.User.Id == userId);
+
+            if (shoppingCart == null)
+            {
+                
+                return NotFound("Shopping cart not found for the specified user.");
+            }
+
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.Id == addToCartDto.ProductId);
+
+            if (product == null)
+            {
+                return NotFound($"Product with ID {addToCartDto.ProductId} not found.");
+            }
+
+            var cartItem = shoppingCart.Cart_Items.FirstOrDefault(ci => ci.Product.Id == addToCartDto.ProductId);
+            if (cartItem != null)
+            {
+                cartItem.Quantity--;
+
+                if (cartItem.Quantity <= 0)
+                {
+                    _context.Cart_Items.Remove(cartItem);
+                }
+
+                if (shoppingCart.Cart_Items.Count == 0)
+                {
+                    _context.Shopping_Carts.Remove(shoppingCart);
+                }
+
+                await _context.SaveChangesAsync();
+                return Ok("Item has been removed from the shopping cart.");
+            }
+            else
+            {
+                return NotFound("Product not found in the shopping cart.");
+            }
+        }
+
+
     }
 }

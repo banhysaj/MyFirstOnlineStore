@@ -6,6 +6,9 @@ import { SharedModule } from '../shared/shared.module';
 import { ProductDetailsComponent } from './product-details/product-details.component';
 import { RouterModule } from '@angular/router';
 import { ShopRoutingModule } from './shop-routing.module';
+import { ShoppingCartModalComponent } from './shopping-cart-modal/shopping-cart-modal.component';
+import { CheckoutComponent } from './checkout/checkout.component';
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -13,12 +16,15 @@ import { ShopRoutingModule } from './shop-routing.module';
   declarations: [
     ShopComponent,
     ProductItemComponent,
-    ProductDetailsComponent
+    ProductDetailsComponent,
+    ShoppingCartModalComponent,
+    CheckoutComponent
   ],
-  imports: [
-    CommonModule,
-    SharedModule,
-    ShopRoutingModule
-  ]
+    imports: [
+        CommonModule,
+        SharedModule,
+        ShopRoutingModule,
+        FormsModule
+    ]
 })
 export class ShopModule { }

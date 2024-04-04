@@ -24,10 +24,9 @@ export class LoginComponent implements OnInit {
       password: ['', Validators.required]
     });
 
-    // Retrieve isLoggedIn from localStorage on component initialization
     const isLoggedInStr = localStorage.getItem('isLoggedIn');
     if (isLoggedInStr) {
-      this.isLoggedIn = isLoggedInStr === 'true'; // Convert string to boolean
+      this.isLoggedIn = isLoggedInStr === 'true';
     }
   }
 

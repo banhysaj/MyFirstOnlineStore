@@ -11,6 +11,7 @@ import { ShopParams } from '../shared/models/shopParams';
   styleUrls: ['./shop.component.scss']
 })
 export class ShopComponent implements OnInit {
+  isLoading = false;
   @ViewChild('search') searchTerm?: ElementRef;
   products: Product[] = [];
   brands: Brand[] = [];
@@ -33,14 +34,18 @@ export class ShopComponent implements OnInit {
   }
 
   getProducts(){
-    this.shopService.getProducts(this.shopParams).subscribe({   
-      next: response => { 
+    this.isLoading = true;
+    this.shopService.getProducts(this.shopParams).subscribe({
+      next: response => {
         this.products = response.data;
+        console.log(response.data);
         this.shopParams.pageNumber = response.pageNumber;
         this.shopParams.pageSize = response.pageSize;
         this.totalCount = response.count;
+        this.isLoading = false;
       },
-      error: error=> console.log(error)
+      error: error=> this.isLoading = false
+
     })
   }
   getBrands(){
@@ -80,7 +85,7 @@ export class ShopComponent implements OnInit {
   }
 
   onPageChanged(event: any){
-    
+
     if(this.shopParams.pageNumber !== event.page){
       this.shopParams.pageNumber = event.page;
       console.log(this.shopParams.pageNumber);

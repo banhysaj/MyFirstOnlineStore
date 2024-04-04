@@ -23,30 +23,6 @@ export class CartService {
     return this.http.get<ShoppingCart>(this.apiUrl + this.userId );
   }
 
-
-  addToCart(product: Product): void {
-    const existingItemIndex = this.items.findIndex(item => item.product.id === product.id);
-
-    if (existingItemIndex !== -1) {
-      this.items[existingItemIndex].quantity++;
-    } else {
-      this.items.push({ product: product, quantity: 1 });
-    }
-  }
-
-  removeFromCart(product: Product): void {
-
-    const existingItemIndex = this.items.findIndex(item => item.product.id === product.id);
-    
-    if (existingItemIndex !== -1) {
-      
-      this.items[existingItemIndex].quantity--;
-      if (this.items[existingItemIndex].quantity === 0) {
-        this.items.splice(existingItemIndex, 1);
-      }
-    }
-  }
-
   getItems(){
     return this.items;
   }

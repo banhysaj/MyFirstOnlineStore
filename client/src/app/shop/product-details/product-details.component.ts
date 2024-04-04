@@ -3,7 +3,7 @@ import { Product } from 'src/app/shared/models/product';
 import { ShopService } from '../shop.service';
 import { ActivatedRoute } from '@angular/router';
 import { BreadcrumbService } from 'xng-breadcrumb';
-import { CartService } from 'src/app/shopping-cart/cart.service';
+import { TokenService } from 'src/app/identity/services/token.service';
 
 @Component({
   selector: 'app-product-details',
@@ -12,10 +12,11 @@ import { CartService } from 'src/app/shopping-cart/cart.service';
 })
 export class ProductDetailsComponent implements OnInit {
   product?: Product;
+  isLoading = true;
 
 
-  constructor(private shopService: ShopService, private activatedRoute: ActivatedRoute, 
-    private bcService: BreadcrumbService, private cartService: CartService){
+  constructor(private shopService: ShopService, private activatedRoute: ActivatedRoute,
+    private bcService: BreadcrumbService, private tokenService: TokenService){
 
       this.bcService.set('@productDetails', '');
 
@@ -25,23 +26,56 @@ export class ProductDetailsComponent implements OnInit {
       this.loadProduct();
     }
 
-    addToCart(product: Product) {
-      this.cartService.addToCart(product);
-      window.alert('Your product has been added to the cart!');
+    addToCart(productId: number) {
+      const userId = this.tokenService.getUserId();
+
+      if (!userId) {
+        console.error('User ID not found.');
+        return;
+      }
+      this.shopService.addItemToCart(userId, productId).subscribe(
+        response => {
+          console.log(response);
+        },
+        error => {
+          console.error('Error adding product to cart:', error);
+        }
+      );
+    }
+
+    removeFromCart(productId: number) {
+      const userId = this.tokenService.getUserId();
+
+      if (!userId) {
+        console.error('User ID not found.');
+        return;
+      }
+      this.shopService.removeItemFromCart(userId, productId).subscribe(
+        response => {
+          window.alert('Product removed from cart successfully:');
+        },
+        error => {
+          console.error('Error removing product to cart:', error);
+        }
+      );
     }
 
     loadProduct(){
 
-    //The get method will return either string or null
     const id = this.activatedRoute.snapshot.paramMap.get('id');
-    //So we make sure it isnt null and we make sure it isnt a string by typecasting with +
     if(id) this.shopService.getProduct(+id).subscribe({
+
       next: product => {this.product = product;
-      this.bcService.set('@productDetails', product.name)
+      this.bcService.set('@productDetails', product.name);
+      this.isLoading = false;
       },
-      error: error=>console.log(error)
+      error: error=> {
+        console.log(error);
+        this.isLoading = false;
+      }
 
     });
+
   }
 
 }

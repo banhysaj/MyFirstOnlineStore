@@ -41,9 +41,6 @@ namespace API.Controllers
 
 
         [HttpGet]
-        //By wrapping our method with "Task" we make the code Async
-        //Helps us make use of a thread, by creating tasks within threads
-        //Helps us handle many concurrent requests
         public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts
         ([FromQuery]ProductSpecParams productParams){
 

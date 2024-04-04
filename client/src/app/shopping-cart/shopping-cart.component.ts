@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CartService } from './cart.service';
-import { Product } from '../shared/models/product';
+import { environment } from 'src/environments/environment.development';
+import { ShoppingCartModalComponent } from '../shop/shopping-cart-modal/shopping-cart-modal.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-shopping-cart',
@@ -8,30 +10,58 @@ import { Product } from '../shared/models/product';
   styleUrls: ['./shopping-cart.component.scss']
 })
 export class ShoppingCartComponent implements OnInit {
-  items=this.cartService.getItems();
   shoppingCartData: any;
+  totalPrice: number = 0;
+  baseUrl: string = environment.apiUrl;
 
-  constructor(private cartService: CartService){}
+  constructor(private dialog: MatDialog,private cartService: CartService){}
   ngOnInit(): void {
     this.fetchShoppingCart();
   }
+  
 
+  // fetchShoppingCart() {
+  //   this.cartService.getShoppingCart().subscribe(data => {
+  //     this.shoppingCartData = data;
+  //     console.log(this.shoppingCartData);
+  //     this.calculateTotalPrice();
+  //   });
+  // }
   fetchShoppingCart() {
     this.cartService.getShoppingCart().subscribe(data => {
-      this.shoppingCartData = data;
-      console.log(this.shoppingCartData);
+      this.shoppingCartData =  data;
+      console.log("testt",this.shoppingCartData);
+      window.alert("It gets it")
+      this.calculateTotalPrice();
+      // const dialogRef = this.dialog.open(ShoppingCartModalComponent, {
+      //   data: { shoppingCartData: data },
+      //   width: '600px',
+      // });
+    });
+  }
+  //
+  openShoppingCart(): void {
+    this.cartService.getShoppingCart().subscribe(data => {
+      const dialogRef = this.dialog.open(ShoppingCartModalComponent, {
+        width: '600px', // Adjust width as needed
+        data: { shoppingCartData: data, totalPrice: this.calculateTotalPrice2(data.cartItems) }
+      });
     });
   }
 
-  addToCart(product: Product) {
-    //In here we call the method from the CartService.ts
-    this.cartService.addToCart(product);
-    window.alert('Your product has been added to the cart!');
+  calculateTotalPrice2(cartItems: any[]): number {
+    let totalPrice = 0;
+    for (let item of cartItems) {
+      totalPrice += item.quantity * item.product.price;
+    }
+    return totalPrice;
   }
 
-  removeFromCart(product: Product): void {
-    //In here we call the method from the CartService.ts
-    this.cartService.removeFromCart(product);
+  //
+  calculateTotalPrice() {
+    this.totalPrice = 0;
+    for (let item of this.shoppingCartData.cartItems) {
+      this.totalPrice += item.quantity * item.product.price;
+    }
   }
-    
 }

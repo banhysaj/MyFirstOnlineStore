@@ -14,6 +14,7 @@
                                     <input formControlName="fullName" type="text" placeholder="Full name">
                                 </div>
                             </div>
+                            <small *ngIf="signUpForm.controls['fullName'].dirty && signUpForm.hasError('pattern', 'fullName')" class="text-danger">*Name cannot contain numbers*</small>
                             <small *ngIf="signUpForm.controls['fullName'].dirty && signUpForm.hasError('required', 'fullName')" 
                             class="text-danger">*Name is required*</small>
                             <div class="form-group pt-3">
@@ -24,6 +25,8 @@
                             </div>
                             <small *ngIf="signUpForm.controls['email'].dirty && signUpForm.hasError('required', 'email')" 
                             class="text-danger">*Email is required*</small>
+                            <small *ngIf="signUpForm.controls['email'].dirty && signUpForm.hasError('email', 'email')" 
+                            class="text-danger">*Email is not valid*</small>
                             <div class="form-group pt-3">
                                 <div class="input-field">
                                     <span class="fa fa-lock p-3"></span>
@@ -33,6 +36,8 @@
                             </div>
                             <small *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('required', 'password')" 
                             class="text-danger">*Password is required*</small>
+                            <small *ngIf="signUpForm.controls['password'].dirty && signUpForm.hasError('pattern', 'password')" 
+                            class="text-danger">*Password must contain at least 1 uppercase, 1 lowercase letter, 1 number and 1 special character *</small>
                             <div class="form-group pt-3">
                                 <div class="input-field">
                                     <span class="fa fa-user p-3"></span>
@@ -51,7 +56,7 @@
                             class="text-danger">*Phone number is required*</small>
                             <div class="text-center">
                                 <button (click)="onSignUp()" type="submit" class="btn btn-primary btn-block mt-4 w-50">Sign up</button>
-                              </div>
+                            </div>
                             <div class="text-center pt-4 text-muted">Already have an account?
                                 <a id="create" routerLink="/login">Login</a>
                             </div>

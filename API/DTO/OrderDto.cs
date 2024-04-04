@@ -7,7 +7,7 @@ namespace API.DTO
         public decimal TotalPrice { get; set; }
         public string Status { get; set; }
         public string Address { get; set; }
-        public int shoppingCartId { get; set; }
+        public int? shoppingCartId { get; set; }
 
     }
 }

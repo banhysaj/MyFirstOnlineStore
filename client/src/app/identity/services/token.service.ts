@@ -19,7 +19,6 @@ export class TokenService {
     const token = this.getToken();
     if (token) {
       try {
-        console.log(token);
         return jwtDecode(token);
 
       } catch (error) {
@@ -32,7 +31,6 @@ export class TokenService {
 
   getFullName(): string | null {
     const decodedToken = this.decodeToken();
-    console.log(decodedToken);
     return decodedToken ? decodedToken.FullName : null;
     
   }

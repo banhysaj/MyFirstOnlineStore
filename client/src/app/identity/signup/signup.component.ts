@@ -19,9 +19,9 @@ export class SignupComponent {
 
   ngOnInit(): void{
     this.signUpForm = this.fb.group({
-      fullName: ['', Validators.required],
-      email: ['', Validators.required],
-      password: ['', Validators.required],
+      fullName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z\s]*$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
       address: ['', Validators.required],
       phoneNumber: ['', Validators.required]
     })
@@ -36,7 +36,7 @@ export class SignupComponent {
 
   onSignUp(){
     if(this.signUpForm.valid){
-
+      console.log(this.signUpForm.value);
       this.auth.signUp(this.signUpForm.value).subscribe({
         next: (response =>{
           alert(response.message);

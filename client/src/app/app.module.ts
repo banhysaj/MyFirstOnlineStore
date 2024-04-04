@@ -12,6 +12,7 @@ import { ShoppingCartComponent } from './shopping-cart/shopping-cart.component';
 import { LoginComponent } from './identity/login/login.component';
 import { SignupComponent } from './identity/signup/signup.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -30,7 +31,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CoreModule,
     HomeModule,
     PaginationModule.forRoot(),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule
     ],
   bootstrap: [AppComponent]
 })
