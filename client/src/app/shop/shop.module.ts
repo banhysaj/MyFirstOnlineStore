@@ -9,6 +9,7 @@ import { ShopRoutingModule } from './shop-routing.module';
 import { ShoppingCartModalComponent } from './shopping-cart-modal/shopping-cart-modal.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import {FormsModule} from "@angular/forms";
+import { OrderConfirmationComponent } from './order-confirmation/order-confirmation.component';
 
 
 
@@ -18,7 +19,8 @@ import {FormsModule} from "@angular/forms";
     ProductItemComponent,
     ProductDetailsComponent,
     ShoppingCartModalComponent,
-    CheckoutComponent
+    CheckoutComponent,
+    OrderConfirmationComponent
   ],
     imports: [
         CommonModule,

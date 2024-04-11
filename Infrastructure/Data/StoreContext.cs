@@ -1,7 +1,6 @@
 using System.Reflection;
 using Core.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Infrastructure.Data
 {
@@ -20,7 +19,10 @@ namespace Infrastructure.Data
         public DbSet<User> Users {get; set;}
         public DbSet<Cart_Item> Cart_Items { get; set; }
         public DbSet<ShoppingCart> Shopping_Carts {get; set;}
+        
+        public DbSet<Order_Item> Order_Items {get; set;}
         public DbSet<Order> Orders {get; set;}
+        
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -31,6 +33,11 @@ namespace Infrastructure.Data
             modelBuilder.Entity<Order>()
             .Property(o => o.OrderDate)
             .HasColumnType("TEXT");
+            
+            modelBuilder.Entity<ShoppingCart>()
+                .HasMany(sc => sc.Cart_Items)
+                .WithOne(ci => ci.ShoppingCart)
+                .OnDelete(DeleteBehavior.Cascade);
 
             if(Database.ProviderName == "Microsoft.EntityFrameworkCore.Sqlite")
             {

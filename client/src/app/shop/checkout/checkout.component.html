@@ -2,21 +2,26 @@
 
 <div class="checkout" *ngIf="!isLoading">
   <div class="row">
-    <!-- Cart items section -->
     <div class="col-md-6 cart-section">
       <h2>Your Shopping Cart</h2>
       <ul class="cart-items">
         <li class="cart-item" *ngFor="let item of shoppingCartData.cartItems">
           <div class="item-details d-flex justify-content-between align-items-center">
             <div class="image-container position-relative">
-              <img src="https://localhost:5001/{{item.product.pictureUrl}}" class="me-2">
+              <img src="https://localhost:5001/{{item.product.pictureUrl}}" class="me-2" alt="Product picture">
               <span class="quantity-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-      {{ item.quantity }}
+                {{ item.quantity }}
                 <span class="visually-hidden">quantity</span>
-    </span>
+              </span>
             </div>
             <span class="name">{{ item.product.name }}</span>
             <span>Price: {{ item.quantity * item.product.price | currency }}</span>
+            <button (click)="removeFromCart(item.product.id)">
+              <i class="fa fa-minus-circle"></i>
+            </button>
+            <button (click)="addToCart(item.product.id)">
+              <i class="fa fa-plus-circle"></i>
+            </button>
           </div>
         </li>
       </ul>
@@ -25,7 +30,6 @@
       </div>
     </div>
 
-    <!-- Checkout form section -->
     <div class="col-md-6 checkout-form-section">
       <h2>Checkout Form</h2>
       <form (ngSubmit)="handleCheckout()" #checkoutForm="ngForm">
@@ -41,7 +45,7 @@
           <label for="email">Email</label>
           <input type="email" id="email" class="form-control" name="email" [(ngModel)]="email" required>
         </div>
-        <div id="card-element"></div>
+        <div style="padding: 30px;  " id="card-element"></div>
         <button type="submit" [disabled]="processing || !checkoutForm.form.valid">Pay</button>
       </form>
     </div>

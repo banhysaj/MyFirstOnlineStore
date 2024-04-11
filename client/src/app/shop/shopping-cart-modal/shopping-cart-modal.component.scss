@@ -2,12 +2,13 @@
   width: 400px;
   height: 100%;
   position: fixed;
-  top: 0;
-  right:0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: #fff;
   padding: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 1040;
+  z-index: 1050;
   margin: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -25,7 +26,8 @@
   .cart-items {
       list-style: none;
       padding: 0;
-      display: flex;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
       flex-wrap: wrap;
       gap: 20px;
   }
@@ -35,7 +37,7 @@
       padding: 20px;
       border: 1px solid #eee;
       border-radius: 10px;
-      box-shadow: 0 20px 5px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
       background-color: #fff;
 
       .item-details {
@@ -57,23 +59,53 @@
           }
       }
   }
-  .checkout-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background-color: #56ff53da;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+.styled-btn {
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 20px;
+}
 
-      &:hover {
-          background-color: #0056b3;
-      }
+.close-btn {
+  background-color: #ce4a4a;
+}
+
+.checkout-btn {
+  background-color: rgba(88, 192, 86, 0.85);
+  &:hover {
+    background-color: rgba(150, 252, 145, 0.6);
   }
+}
 
+  .shop-now-btn {
+  border: none;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  margin-top: 20px;
+  padding: 10px 20px;
+  color: #fff;
+  border-radius: 20px;
+  background-color: #4CAF50;
+}
 
+.shopping-cart-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
+}
   .total-price {
       margin-top: 20px;
       font-size: 20px;

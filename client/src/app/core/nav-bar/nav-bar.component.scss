@@ -10,11 +10,16 @@
     right: 32px;
 }
 
+header{
+  z-index: 1000;
+  position: sticky !important;
+}
+
 a{
     text-decoration: none;
     color: black;
     &.active{
-        color: #ff9059;
+        color: #7827d0;
     }
 }
 
@@ -23,14 +28,19 @@ a{
 }
 
 .logout-link {
-    color: #fff; /* Text color */
-    background-color: rgba(255, 0, 0, 0.619); /* Background color */
-    padding: 10px 20px; /* Padding */
-    border-radius: 20px; /* Rounded corners */
-    text-decoration: none; /* Remove underline */
+    color: #fff;
+    background-color: rgba(255, 0, 0, 0.619);
+    padding: 10px 20px;
+    border-radius: 20px;
+    text-decoration: none;
   }
-  
+
   .logout-link:hover {
-    background-color: rgb(244, 70, 70); /* Change background color on hover */
+    background-color: rgb(244, 70, 70);
+  }
+
+  .header-title{
+    font-size: 16px !important;;
+
   }
 

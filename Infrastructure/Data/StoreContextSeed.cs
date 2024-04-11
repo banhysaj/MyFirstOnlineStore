@@ -25,16 +25,16 @@ namespace Infrastructure.Data
                 var products = JsonSerializer.Deserialize<List<Product>>(productsData);
                 context.Products.AddRange(products);
             }
-            if(!context.Cart_Items.Any()){
-                var CartItemsData = File.ReadAllText("../Infrastructure/Data/SeedData/CartItems.json");
-                var CartItems = JsonSerializer.Deserialize<List<Cart_Item>>(CartItemsData);
-                context.Cart_Items.AddRange(CartItems);
-            }
-            if(!context.Shopping_Carts.Any()){
-                var ShoppingCartsData = File.ReadAllText("../Infrastructure/Data/SeedData/ShoppingCarts.json");
-                var ShoppingCarts = JsonSerializer.Deserialize<List<ShoppingCart>>(ShoppingCartsData);
-                context.Shopping_Carts.AddRange(ShoppingCarts);
-            }
+            // if(!context.Cart_Items.Any()){
+            //     var CartItemsData = File.ReadAllText("../Infrastructure/Data/SeedData/CartItems.json");
+            //     var CartItems = JsonSerializer.Deserialize<List<Cart_Item>>(CartItemsData);
+            //     context.Cart_Items.AddRange(CartItems);
+            // }
+            // if(!context.Shopping_Carts.Any()){
+            //     var ShoppingCartsData = File.ReadAllText("../Infrastructure/Data/SeedData/ShoppingCarts.json");
+            //     var ShoppingCarts = JsonSerializer.Deserialize<List<ShoppingCart>>(ShoppingCartsData);
+            //     context.Shopping_Carts.AddRange(ShoppingCarts);
+            // }
 
             if(context.ChangeTracker.HasChanges()) await context.SaveChangesAsync();
         }

@@ -22,9 +22,12 @@ namespace API.Controllers
             {
                 return BadRequest("User not found");
             }
-
-            var shoppingCart = await _context.Shopping_Carts.FirstOrDefaultAsync(sc => sc.Id == orderDto.shoppingCartId);
-            if (shoppingCart == null)
+            
+            var shoppingCart = await _context.Shopping_Carts
+                .Include(sc => sc.Cart_Items)
+                .ThenInclude(ci => ci.Product)
+                .FirstOrDefaultAsync(sc => sc.Id == orderDto.shoppingCartId);
+            if(shoppingCart == null)
             {
                 return BadRequest("Shopping cart not found");
             }
@@ -32,14 +35,18 @@ namespace API.Controllers
             var order = new Order
             {
                 User = user,
-                ShoppingCart = shoppingCart,
                 TotalPrice = orderDto.TotalPrice,
                 Status = orderDto.Status,
                 Address = orderDto.Address,
-                OrderDate = DateTime.Now
+                Order_Items = shoppingCart.Cart_Items.Select(ci => new Order_Item
+                {
+                    Product = ci.Product,
+                    Quantity = ci.Quantity
+                }).ToList()
             };
-
+            
             _context.Orders.Add(order);
+            _context.Shopping_Carts.Remove(shoppingCart);
             await _context.SaveChangesAsync();
 
             return Ok(orderDto);
@@ -56,7 +63,8 @@ namespace API.Controllers
 
             var orders = await _context.Orders
                 .Include(o => o.User)
-                .Include(o => o.ShoppingCart)
+                .Include(o => o.Order_Items)
+                .ThenInclude(oi => oi.Product)
                 .Where(o => o.User.Id == userId)
                 .ToListAsync();
 
@@ -66,11 +74,10 @@ namespace API.Controllers
                 TotalPrice = o.TotalPrice,
                 Status = o.Status,
                 Address = o.Address,
-                shoppingCartId = o.ShoppingCart.Id
+                
             }).ToList();
 
             return Ok(orderDtos);
         }
-
     }
 }

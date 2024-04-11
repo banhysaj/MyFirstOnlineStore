@@ -17,26 +17,28 @@ export class NavBarComponent {
   userId: number | null = null;
   isModalOpen = false;
   cartItemCount = 0;
-  
+
   @Output() openShoppingCartModal: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private dialog: MatDialog,private authService: AuthService, private tokenService: TokenService, private cartService: CartService) {
+
+    }
+
+
+  ngOnInit() {
     this.isLoggedIn = this.authService.isLoggedIn();
     if (this.isLoggedIn) {
       const fullName = this.tokenService.getFullName();
       this.firstName = fullName ? fullName.split(' ')[0] : null;
       this.userId = this.tokenService.getUserId();
     }
-  }
-
-  ngOnInit() {
     if(this.isLoggedIn){
     this.cartService.getShoppingCart().subscribe(data => {
       this.cartItemCount = data.cartItems.length;
     });
   }
   }
-  
+
   handleOpenShoppingCartModal(): void {
     if (!this.isModalOpen) {
       const dialogRef = this.dialog.open(ShoppingCartModalComponent, {
@@ -54,8 +56,5 @@ export class NavBarComponent {
   logout() {
     this.authService.logout();
   }
-
-  
-  
 
 }

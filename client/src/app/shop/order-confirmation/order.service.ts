@@ -15,8 +15,8 @@ export class OrderService {
     this.orderSource.next(order);
   }
 
-  setOrderDto(orderDto: any) { // Add this method
-    this.orderDto = orderDto;
+  setOrderDto(orderDtos: any) { // Add this method
+    this.orderDto = orderDtos;
   }
 
   getOrderDto(): any { // Add this method
