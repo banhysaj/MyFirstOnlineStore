@@ -22,12 +22,13 @@ export class ProductItemComponent {
     }
     this.isLoading = true;
     this.shopService.addItemToCart(userId, productId).subscribe(
+
       response => {
         console.log('Product added to cart successfully:', response);
         this.isLoading = false;
       },
       error => {
-        console.error('Error adding product to cart:', error);
+
         this.isLoading = false;
       }
     );

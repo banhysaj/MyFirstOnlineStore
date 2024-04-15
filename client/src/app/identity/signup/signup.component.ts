@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import ValidateForm from '../helpers/ValidateForm';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
@@ -23,7 +23,7 @@ export class SignupComponent {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
       address: ['', Validators.required],
-      phoneNumber: ['', Validators.required]
+      phoneNumber: ['', [Validators.required, Validators.pattern(/(^\+\d{10,12}$)|(^\d{10}$)/)]]
     })
 
 

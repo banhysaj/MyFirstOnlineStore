@@ -326,7 +326,7 @@ namespace API.Controllers
                     _context.Cart_Items.Remove(cartItem);
                 }
 
-                if (shoppingCart.Cart_Items.Count == 0)
+                if (shoppingCart.Cart_Items.Count <= 0)
                 {
                     _context.Shopping_Carts.Remove(shoppingCart);
                 }

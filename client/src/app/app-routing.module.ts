@@ -6,6 +6,7 @@ import { LoginComponent } from './identity/login/login.component';
 import { SignupComponent } from './identity/signup/signup.component';
 import { AuthGuard } from './guards/auth.guard';
 import {CheckoutComponent} from "./shop/checkout/checkout.component";
+import {OrderConfirmationComponent} from "./shop/order-confirmation/order-confirmation.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent, data:{breadcrumb: 'Home'}},
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path:'signup', component: SignupComponent},
   {path:'cart', component: ShoppingCartComponent, canActivate: [AuthGuard]},
   {path:'checkout', component: CheckoutComponent, canActivate: [AuthGuard]},
+  {path:'order-confirmation', component: OrderConfirmationComponent, canActivate: [AuthGuard]},
   {path:'**', redirectTo: '', pathMatch:'full'}
 ];
 

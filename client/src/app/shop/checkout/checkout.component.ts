@@ -6,13 +6,17 @@ import {StripeServiceService} from "./stripe-service.service";
 import {catchError} from 'rxjs/operators';
 import {of} from 'rxjs';
 import{TokenService} from "../../identity/services/token.service";
+import {Router} from "@angular/router";
+import{OrderService} from "../order-confirmation/order.service";
+import {Order} from "@stripe/stripe-js";
+import {ShopService} from "../shop.service";
 
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
   styleUrls: ['./checkout.component.scss']
 })
-export class CheckoutComponent implements OnInit, AfterViewInit {
+export class CheckoutComponent implements OnInit {
   shoppingCartData: ShoppingCart = {} as ShoppingCart;
   totalPrice: number = 0;
   isLoading: boolean = true;
@@ -24,7 +28,10 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
   constructor(private cartService: CartService,
               private http: HttpClient,
               private stripeService: StripeServiceService,
-              private tokenService: TokenService) {
+              private tokenService: TokenService,
+              private router: Router,
+              private orderService: OrderService,
+              private shopService: ShopService) {
   }
 
   ngOnInit(): void {
@@ -44,18 +51,13 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
         this.calculateTotalPrice();
       }
       this.isLoading = false;
+      this.stripeService.mountCardElement().then(x=>{
+        console.log('Card element mounted');
+      }).catch(err=>{
+        console.error('Failed to mount card element', err);
+      })
       console.log('ngOnInit completed');
     });
-  }
-
-  async ngAfterViewInit(): Promise<void> {
-    try {
-      await new Promise(resolve => setTimeout(resolve));
-      await this.stripeService.mountCardElement();
-      console.log('Card element mounted');
-    } catch (error) {
-      console.error('Failed to mount card element', error);
-    }
   }
 
   calculateTotalPrice() {
@@ -67,30 +69,70 @@ export class CheckoutComponent implements OnInit, AfterViewInit {
     console.log('calculateTotalPrice completed');
   }
 
+  addToCart(productId: number) {
+    const userId = this.tokenService.getUserId();
+
+    if (!userId) {
+      console.error('User ID not found.');
+      return;
+    }
+
+    this.shopService.addItemToCart(userId, productId).subscribe(
+      response => {
+        console.log('Product added to cart successfully:', response);
+      },
+      error => {
+        console.error('Error adding product to cart:', error);
+      }
+    );
+  }
+
+
+  removeFromCart(productId: number) {
+    const userId = this.tokenService.getUserId();
+
+    if (!userId) {
+      console.error('User ID not found.');
+      return;
+    }
+
+    this.shopService.removeItemFromCart(userId, productId).subscribe(
+      response => {
+        console.log('Product removed from cart successfully:', response);
+      },
+      error => {
+        console.error('Error removing product from cart:', error);
+      }
+    );
+  }
+
   async handleCheckout() {
     console.log('handleCheckout started');
     this.processing = true;
     try {
       await this.stripeService.handlePayment(this.totalPrice, this.shoppingCartData.userId.toString());
       console.log('Payment succeeded');
-      /*const orderDto = {
+      const orderDto = {
         userId: this.shoppingCartData.userId,
         TotalPrice: this.totalPrice,
         Status: "Completed",
-        Address: this.address, // Replace with actual address
+        Address: this.address,
         shoppingCartId: this.shoppingCartData.id
       };
 
       this.http.post('https://localhost:5001/api/Order/addOrder', orderDto).subscribe(response => {
         console.log('Order created in database', response);
+        this.orderService.setOrderDto(orderDto);
+        this.router.navigate(['/order-confirmation']);
       }, error => {
         console.error('Failed to create order in database', error);
-      }); */
+      });
     } catch (error) {
       console.error('Payment failed', error);
     } finally {
       this.processing = false;
       console.log('handleCheckout completed');
     }
+
   }
 }

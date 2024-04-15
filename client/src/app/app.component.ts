@@ -18,7 +18,9 @@ export class AppComponent implements OnInit {
   openShoppingCartModal(): void {
     const dialogRef = this.dialog.open(ShoppingCartModalComponent, {
       width: '600px',
-      data: { }
+      data: { },
+      hasBackdrop: true,
+      backdropClass: 'cdk-overlay-dark-backdrop'
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -40,6 +42,6 @@ export class AppComponent implements OnInit {
     this.isLoggedIn = false;
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('userName');
-    this.authService.logout(); 
+    this.authService.logout();
   }
 }

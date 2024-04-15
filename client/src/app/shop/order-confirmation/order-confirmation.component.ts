@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
+import{OrderService} from "./order.service";
+import {orderDto} from "../../shared/models/order";
+import{TokenService} from "../../identity/services/token.service";
 
 @Component({
   selector: 'app-order-confirmation',
@@ -7,12 +9,17 @@ import {ActivatedRoute, Router} from "@angular/router";
   styleUrls: ['./order-confirmation.component.scss']
 })
 export class OrderConfirmationComponent implements OnInit {
-  order: any;
-  constructor(private route: ActivatedRoute, private router: Router) { }
+  finalOrder: orderDto | null = null;
+  email = this.tokenService.getEmail();
+  fullName = this.tokenService.getFullName();
+
+  constructor(private orderService: OrderService, private tokenService: TokenService) {
+  }
 
   ngOnInit(): void {
-    this.order = this.router.getCurrentNavigation()?.extras.state;
-    console.log(this.order);
+
+    this.finalOrder = this.orderService.getOrderDto();
+    console.log('This is the final order:', this.finalOrder)
   }
 
 }

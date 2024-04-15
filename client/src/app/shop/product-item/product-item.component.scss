@@ -10,9 +10,10 @@
 
 .image :hover{
     opacity: 2;
+
     & button {
         transform: none;
-        opacity: 1;  
+        opacity: 1;
     }
 }
 
@@ -40,6 +41,10 @@
     }
 }
 
+.inside-image{
+  border-bottom-right-radius: 1px !important;
+  border-bottom-left-radius: 1px !important;
+}
 
 
 

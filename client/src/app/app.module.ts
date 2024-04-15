@@ -13,6 +13,7 @@ import { LoginComponent } from './identity/login/login.component';
 import { SignupComponent } from './identity/signup/signup.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import {SharedModule} from "./shared/shared.module";
 
 
 
@@ -32,8 +33,9 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
     HomeModule,
     PaginationModule.forRoot(),
     ReactiveFormsModule,
-    MatDialogModule
-    ],
+    MatDialogModule,
+    SharedModule
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

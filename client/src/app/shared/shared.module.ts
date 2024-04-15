@@ -5,6 +5,8 @@ import { PagingHeaderComponent } from './paging-header/paging-header.component';
 import { PagerComponent } from './pager/pager.component';
 import { CarouselModule } from 'ngx-bootstrap/carousel';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
+import { FooterComponent } from './footer/footer.component';
+import {FormsModule} from "@angular/forms";
 
 
 
@@ -12,19 +14,22 @@ import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.compo
   declarations: [
     PagingHeaderComponent,
     PagerComponent,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    FooterComponent
   ],
   imports: [
     CommonModule,
     PaginationModule.forRoot(),
-    CarouselModule.forRoot()
+    CarouselModule.forRoot(),
+    FormsModule
   ],
   exports: [
     PaginationModule,
     PagingHeaderComponent,
     PagerComponent,
     CarouselModule,
-    LoadingSpinnerComponent
+    LoadingSpinnerComponent,
+    FooterComponent
   ]
 })
 export class SharedModule { }

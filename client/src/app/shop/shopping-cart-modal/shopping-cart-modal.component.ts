@@ -23,9 +23,11 @@ export class ShoppingCartModalComponent {
   ngOnInit(){
     this.cartService.getShoppingCart().subscribe(data => {
       this.shoppingCartData =  data;
-      this.isLoading= false;
       this.calculateTotalPrice();
-    });
+      this.isLoading= false;
+    }, error => {
+      this.isLoading= false;
+      });
   }
 
   calculateTotalPrice() {

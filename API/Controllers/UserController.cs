@@ -1,4 +1,3 @@
-using BCrypt.Net;
 using API.DTO;
 using Core.Entities;
 using Infrastructure.Data;
@@ -57,27 +56,28 @@ namespace API.Controllers
     [HttpPost("register")]
     
     //RREGULLO USER TO REGISTERDTO, PRANON PASSWORDE TE THJESHTA, SHIH REGEXAT
-    public async Task<IActionResult> Register([FromBody] RegisterDto registerObj){
+    public async Task<IActionResult> Register([FromBody] User user){
         
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
+            
         }
         
-        if(registerObj == null){
-            return BadRequest();
+        if(user == null){
+            return NotFound();
         }
 
-        var emailExists = await _authContext.Users.AnyAsync(x=> x.Email == registerObj.Email);
+        var emailExists = await _authContext.Users.AnyAsync(x=> x.Email == user.Email);
         if(emailExists){
             return BadRequest(new {Message = "Email already exists"});
         }
 
-        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerObj.Password);
-        registerObj.Password = hashedPassword;
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(user.Password);
+        user.Password = hashedPassword;
         
 
-        await _authContext.AddAsync(registerObj);
+        await _authContext.AddAsync(user);
         await _authContext.SaveChangesAsync();
 
         return Ok(new {

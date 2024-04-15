@@ -1,12 +1,12 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 
-<div class="shopping-cart-modal" *ngIf="!isLoading">
+<div class="shopping-cart-modal" *ngIf="!isLoading && shoppingCartData && shoppingCartData.cartItems.length > 0">
     <h2>Your Shopping Cart</h2>
     <ul class="cart-items">
       <li class="cart-item" *ngFor="let item of shoppingCartData.cartItems">
         <div class="item-details">
           <span class="name">{{ item.product.name }}</span>
-          <img src="https://localhost:5001/{{item.product.pictureUrl}}">
+          <img src="{{baseUrl}}{{item.product.pictureUrl}}">
           <span class="quantity">Quantity: {{ item.quantity }}</span>
           <span>Price: {{ item.quantity * item.product.price | currency }}</span>
         </div>
@@ -15,6 +15,13 @@
     <div class="total-price">
       <h3>Total Price: {{ totalPrice | currency }}</h3>
     </div>
-    <button mat-button class="close-btn" (click)="onClose()">Close</button>
-    <button mat-button class="checkout-btn" routerLink="/checkout">Checkout</button>
-  </div>
+    <button  class="close-btn styled-btn" (click)="onClose()">Close</button>
+    <button  class="checkout-btn styled-btn" (click)="onClose()" routerLink="/checkout">Checkout</button>
+</div>
+
+<div class="shopping-cart-modal" *ngIf="!isLoading && (shoppingCartData == null || shoppingCartData.cartItems.length === 0)">
+  <h2>Your shopping cart is empty</h2>
+  <button class="shop-now-btn" (click)="onClose()" routerLink="/shop">Shop now</button>
+  <button class="close-btn styled-btn" (click)="onClose()">Close</button>
+</div>
+

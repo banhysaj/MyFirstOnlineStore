@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
 import ValidateForm from '../helpers/ValidateForm';
@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  //@Input() isUserLoggedIn: boolean = false;
   type: string = "password";
   isText: boolean = false;
   eyeIcon: string = "fa-eye-slash";
@@ -38,14 +39,13 @@ export class LoginComponent implements OnInit {
 
   onLogin() {
     if (this.loginForm.valid) {
-
       this.auth.login(this.loginForm.value).subscribe({
         next: (response) => {
-          this.router.navigate(['shop']);
-          this.auth.saveToken(response.token);
           this.isLoggedIn = true;
-          localStorage.setItem('isLoggedIn', String(this.isLoggedIn)); // Convert boolean to string
+          this.auth.saveToken(response.token);
+          localStorage.setItem('isLoggedIn', String(this.isLoggedIn));
           this.loginForm.reset();
+          this.router.navigateByUrl('/shop');
         },
         error: (error) => {
           alert(error?.error.message);

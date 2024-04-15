@@ -6,10 +6,10 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private baseUrl:string ="https://localhost:5001/api/users/" 
+  private baseUrl:string ="https://localhost:5001/api/users/"
   constructor(private http : HttpClient) {}
 
-  
+
   signUp(userObj: any){
       return this.http.post<any>(`${this.baseUrl}register`, userObj);
   }
@@ -21,16 +21,11 @@ export class AuthService {
   saveToken(tokenValue: string) {
     localStorage.setItem('token', tokenValue);
   }
-
-  getToken(): string | null {
-    return localStorage.getItem('token');
-  }
-
   isLoggedIn(): boolean{
     return !!localStorage.getItem('token')
   }
   logout() {
-    localStorage.removeItem('token'); 
+    localStorage.removeItem('token');
   }
-  
+
 }
